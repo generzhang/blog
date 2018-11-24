@@ -1,6 +1,6 @@
-#彻底搞懂Promise、Generator函数 yield、async await 的关系
+# 彻底搞懂Promise、Generator函数 yield、async await 的关系
 
-说到底，这三者的出现，都是为了解决异步问题。
+## 说到底，这三者的出现，都是为了解决异步问题。
 
 Promise是一个构造函数，自身有race、all、reject、resolve 方法，原型上有then、catch方法。
 ES6将其写进语言标准，统一了用法，而在此之前，你也可以自己造一个Promise。
@@ -26,6 +26,7 @@ async await是ES7的新特性，也是Generator函数的语法糖。
 
 在网上找了个例子，
 首先先定义一个 Fetch 方法用于获取 github user 的信息：
+```javascript
 function fetchUser() { 
     return new Promise((resolve, reject) => {
         fetch('https://api.github.com/users/superman66')
@@ -36,9 +37,11 @@ function fetchUser() {
         })
     });
 }
+```
 
 
 【Promise 方式】
+```javascript
 function getUserByPromise() {
     fetchUser()
         .then((data) => {
@@ -48,7 +51,7 @@ function getUserByPromise() {
         })
 }
 getUserByPromise();
-
+```
 
 Promise 的方式虽然解决了 callback hell，但是这种方式充满了 Promise的 then() 方法，如果处理流程复杂的话，
 整段代码将充满 then。语义化不明显，代码流程不能很好的表示执行流程。 
@@ -56,6 +59,7 @@ Promise 的方式虽然解决了 callback hell，但是这种方式充满了 Pro
 
 
 【Generator 方式】
+```javascript
 function* fetchUserByGenerator() {
     const user = yield fetchUser();
     return user;
@@ -68,18 +72,19 @@ result.then((v) => {
 }, (error) => {
     console.log(error);
 })
-
+```
 Generator 的方式解决了 Promise 的一些问题，流程更加直观、语义化。
 但是 Generator 的问题在于，函数的执行需要依靠执行器，每次都需要通过 g.next() 的方式去执行。 
 
 【async 方式】
+```javascript
 async function getUserByAsync(){
      let user = await fetchUser();
      return user;
  }
 getUserByAsync()
 .then(v => console.log(v));
-
+```
 async 函数完美的解决了上面两种方式的问题。流程清晰，直观、语义明显。
 操作异步流程就如同操作同步流程。同时 async 函数自带执行器，执行的时候无需手动加载。
 
